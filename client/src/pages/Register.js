@@ -1,23 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Form } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 
-import { useForm } from '../util/hooks';
+import { AuthContext } from "../context/auth.js";
+import { useForm } from "../util/hooks";
 
 function Register(props) {
+  const context = useContext(AuthContext);
   const [errors, setErrors] = useState({});
 
   const { onChange, onSubmit, values } = useForm(registerUser, {
     username: "",
     email: "",
     password: "",
-    confirmPassword: ""
-  }); 
+    confirmPassword: "",
+  });
 
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
-    update(_, result) {
-      props.history.push('/');
+    update(_, { data: { register: userData } }) {
+      context.login(userData);
+      props.history.push("/");
     },
     onError(err) {
       setErrors(err.graphQLErrors[0].extensions.exception.errors);
@@ -25,8 +28,8 @@ function Register(props) {
     variables: values,
   });
 
-  function registerUser(){
-      addUser();
+  function registerUser() {
+    addUser();
   }
 
   return (
@@ -74,13 +77,13 @@ function Register(props) {
         </Button>
       </Form>
       {Object.keys(errors).length > 0 && (
-                <div className='ui error message'>
-                <ul className='list'>
-                    {Object.values(errors).map(value => (
-                        <li key={value}>{value}</li>
-                    ))}
-                </ul>
-            </div>
+        <div className="ui error message">
+          <ul className="list">
+            {Object.values(errors).map((value) => (
+              <li key={value}>{value}</li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );
