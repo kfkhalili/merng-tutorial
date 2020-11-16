@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Button, Form } from "semantic-ui-react";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 import { AuthContext } from "../context/auth";
@@ -16,7 +16,7 @@ function Login(props) {
   });
 
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
-    update(_, { data: { login: userData }}) {
+    update(_, { data: { login: userData } }) {
       context.login(userData);
       props.history.push("/");
     },
@@ -35,7 +35,7 @@ function Login(props) {
       <Form onSubmit={onSubmit} noValidate className={loading ? "loading" : ""}>
         <h1>Login</h1>
         <Form.Input
-          label="username"
+          label="Username"
           placeholder="Username.."
           name="username"
           type="text"

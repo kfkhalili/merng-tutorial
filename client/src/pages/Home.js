@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/react-hooks";
 import { Grid, Transition } from "semantic-ui-react";
 
 import { AuthContext } from "../context/auth";
@@ -9,10 +9,10 @@ import { FETCH_POSTS_QUERY } from "../util/graphql";
 
 function Home() {
   const { user } = useContext(AuthContext);
-
-  const { loading, data: { getPosts: posts } = {} } = useQuery(
-    FETCH_POSTS_QUERY
-  );
+  const {
+    loading,
+    data: { getPosts: posts },
+  } = useQuery(FETCH_POSTS_QUERY);
 
   return (
     <Grid columns={3}>
